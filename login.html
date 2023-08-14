@@ -18,9 +18,20 @@
 
 <body>
   <main class="mt-5">
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+    <div class="container" id="containerLogin">
+      <div id="containerLoginHeader">
+        <img src="img/login.png">
+        <div id="loginHeader">
+          <h1>Bienvenido</h1>
+          <h2>Por favor, ingrese a su cuenta</h2>
+        </div>
+        <form id="loginForm" action="index.html" method="get">
+          <input id="usuario" type="email" name="usuario" placeholder="usuario@correo.com" required>
+          <div id="emailWarning">Correo inválido.</div>
+          <input id="contrasenia" type="password" name="contrasenia" placeholder="Contraseña" required>
+          <div id="passWarning">Contraseña inválida.</div>
+          <input id="loginSubmit" type="submit" name="ingresar" value="Ingresar">
+        </form>
       </div>
     </div>
   </main>
