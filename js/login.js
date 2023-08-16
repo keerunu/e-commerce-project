@@ -1,3 +1,12 @@
+var email = document.getElementById("usuario")
+
+document.getElementById("loginForm").addEventListener ("submit", () => {
+  if (window.sessionStorage) {
+    sessionStorage.setItem("usuario", email.value);
+    window.location = "index.html"
+  }
+});
+
 document.getElementById("loginSubmit").addEventListener("click", validateLogin);
 
 function validateLogin () {
