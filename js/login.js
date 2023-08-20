@@ -1,29 +1,34 @@
-var email = document.getElementById("usuario")
+function submitForm(event) {
+    event.preventDefault();
+    let usuario = document.getElementById("usuario").value;
+    let contrasena = document.getElementById("contrasena").value;
+    let loginError = document.getElementById("loginError");
+    let errorMessage = "";
 
-document.getElementById("loginForm").addEventListener ("submit", () => {
-  if (window.sessionStorage) {
-    sessionStorage.setItem("usuario", email.value);
-    window.location = "index.html"
-  }
-});
-
-document.getElementById("loginSubmit").addEventListener("click", validateLogin);
-
-function validateLogin () {
-    let emailInput = document.getElementById("usuario");
-    let passInput = document.getElementById("contrasenia");
-    let emailWarning = document.getElementById("emailWarning");
-    let passWarning = document.getElementById("passWarning");
-    
-    if (!emailInput.checkValidity()) {
-        emailWarning.style.display = "block";
+    if (usuario !== "" && contrasena !== "") {
+        localStorage.setItem("usuario", usuario);
+        window.location.href = "index.html";
     } else {
-        emailWarning.style.display = "none";
+        errorMessage = "Usuario y contraseña requerido";
     }
-    
-    if (!passInput.checkValidity()) {
-        passWarning.style.display = "block";
+
+    loginError.innerHTML = errorMessage;
+};
+
+function mostrarPassword() {
+    var contrasena = document.getElementById("contrasena");
+    var show_eye = document.getElementById("show_eye");
+    var hide_eye = document.getElementById("hide_eye");
+
+    hide_eye.classList.remove("d-none");
+
+    if (contrasena.type === "password") {
+        contrasena.type = "text";
+        show_eye.style.display = "none";
+        hide_eye.style.display = "block";
     } else {
-        passWarning.style.display = "none";
+        contrasena.type = "password";
+        show_eye.style.display = "block";
+        hide_eye.style.display = "none";
     }
 }

@@ -1,14 +1,14 @@
-var usuario = sessionStorage.getItem("usuario");
-
-if (usuario === "" || usuario === null) {
-    window.location = "login.html"
-}
-
 document.getElementById("cerrarSesion").addEventListener ("click", () => {
     window.location = "login.html"
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+    var usuario = localStorage.getItem("usuario");
+
+    if (usuario === null) {
+        window.location = "login.html"
+    }
+
     document.getElementById("autos").addEventListener("click", function() {
         localStorage.setItem("catID", 101);
         window.location = "products.html"
