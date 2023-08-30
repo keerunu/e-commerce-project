@@ -30,7 +30,7 @@ function showData(dataArray) {
         </div>
     </div>
 </div>
-    `
+    `;
   }
 }
 
@@ -41,17 +41,6 @@ async function getJson () {
   showData(json);
 }
 
-document.addEventListener("DOMContentLoaded", function(e){
-  var usuario = localStorage.getItem("usuario");
-
-  if (usuario === null){
-      window.location.href="login.html";
-  } else {
-      document.getElementById("p_usuario").innerHTML = localStorage.getItem("usuario");
-  }
-
-  getJson();
-});
 
 /*
 1- Recibe la ID de la categoría en la que hacemos click en categories.html (declarada en categories.js) y toma la información de ID.json, 101.json en el caso de Autos, por ejemplo.

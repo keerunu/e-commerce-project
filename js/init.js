@@ -15,6 +15,15 @@ let hideSpinner = function(){
   document.getElementById("spinner-wrapper").style.display = "none";
 }
 
+document.addEventListener("DOMContentLoaded", function(){
+  var usuario = localStorage.getItem('usuario');
+  if (usuario === null){
+      window.location.href="login.html";
+  } else {
+      document.getElementById("p_usuario").innerHTML = localStorage.getItem("usuario");
+  }
+});
+
 let getJSONData = function(url){
     let result = {};
     showSpinner();
