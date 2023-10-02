@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const responseProducto = await fetch(productInfoUrl);
         const jsonProducto = await responseProducto.json();
         showData(jsonProducto);
+        showRelatedProducts(jsonProducto);
         const responseComentario = await fetch(commentsUrl);
         const jsonComentario = await responseComentario.json();
         comJson(jsonComentario);
@@ -30,24 +31,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showData(data){
         divProductInfo.innerHTML = `
-        <div class="text-center p-4"">
+        <div class="text-center p-4">
             <h2>${data.name}</h2></div>
         <div class="list-group">
-            <div class="p-3 list-group-item">
+            <div class="p-3 list-group-item bg-light">
                 <h6><span class="h5">Descripción: </span>${data.description}</h6></div>
-            <div class="p-3 list-group-item">
+            <div class="p-3 list-group-item bg-light">
                 <h6><span class="h5">Precio: </span>${data.cost} ${data.currency}</h6></div>
-            <div class="p-3 list-group-item">
+            <div class="p-3 list-group-item bg-light">
                 <h6><span class="h5">Cantidad vendidos: </span>${data.soldCount}</h6></div>
-            <div class="p-3 list-group-item">
+            <div class="p-3 list-group-item bg-light">
                 <h6><span class="h5">Categoría: </span>${data.category}</h6></div>
         <div>`
-        data.images.forEach(imagen => {
-            productImgs.innerHTML += `
-                <div class="col">
-                <img class="img-fluid border m-2" src="${imagen}" alt="${data.name}">
-                </div>`
-        })
+
+        //Cambia el src de las imagenes del carrusel
+        let imgCarousel = document.querySelectorAll('.imgCarousel');
+        let i = 0
+        imgCarousel.forEach((element)=> element.src = data.images[i++])
+
+        //Modo oscuro
+        modeListado()
     }
 
     //Función que muestra las estrellas
@@ -75,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
             comentarios.innerHTML += `
             <div class="commentsHechos">
                 <ul class='list-group'>
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-light">
                         <div>
                             <strong>${comment.user}</strong>
                             <small class='text-muted'> &nbsp; - ${comment.dateTime} - &nbsp; </small>
@@ -88,6 +91,8 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         ` 
         }
+        //Modo oscuro
+        modeListado()
     }
 
     //Función que agrega el comentario y lo guarda en el localstorage
@@ -107,12 +112,17 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem(`comentario ${productId}`, comentarioHTML);
 
         comentarios.innerHTML += comentarioHTML;
+
+        //Modo oscuro
+        modeListado()
     }
 
     //Se obtiene el comentario del localstorage y se muestra en pantalla
     const productId = localStorage.getItem('productId')
     const comentarioCargado = localStorage.getItem(`comentario ${productId}`);
-    comentarios.innerHTML += comentarioCargado
+    if(comentarioCargado != undefined) {
+        comentarios.innerHTML += comentarioCargado
+    }
 
     //Obtención de datos del formulario
     const commentForm = document.getElementById('commentForm');
@@ -120,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     commentForm.addEventListener('submit', e => {
         e.preventDefault();
 
-        const puntuacion = document.getElementById('puntuacion').value;
+        let puntuacion = document.querySelector('input[name="estrellas"]:checked').value;
         const opinion = document.getElementById('opinion').value;
         const actualUser = localStorage.getItem('usuario');
         const fechaHora = new Date();
@@ -132,6 +142,21 @@ document.addEventListener("DOMContentLoaded", function () {
         commentForm.reset();
     });
 
-    
 });
 
+//Productos relacionados
+    function setProdId(id){
+        localStorage.setItem("productId", id);
+        window.location.href = "product-info.html"; 
+    }
+
+    const relProds = document.getElementById("related-products");
+    function showRelatedProducts(array) { 
+        relProds.innerHTML = ""; 
+        array.relatedProducts.forEach((element)=>
+        relProds.innerHTML += ` 
+            <div class="m-3 col text-center" onclick="setProdId(${element.id})"> 
+                <img src="${element.image}" class="img-thumbnail imgRelated m-3"> 
+                <h4 class="ms-3">${element.name}</h4> 
+            </div>`)
+    } 
