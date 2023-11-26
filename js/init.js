@@ -1,20 +1,77 @@
-const CATEGORIES_URL = "https://japceibal.github.io/emercado-api/cats/cat.json";
-const PUBLISH_PRODUCT_URL =
-  "https://japceibal.github.io/emercado-api/sell/publish.json";
-const PRODUCTS_URL = "https://japceibal.github.io/emercado-api/cats_products/";
-const PRODUCT_INFO_URL = "https://japceibal.github.io/emercado-api/products/";
-const PRODUCT_INFO_COMMENTS_URL =
-  "https://japceibal.github.io/emercado-api/products_comments/";
-const CART_INFO_URL = "https://japceibal.github.io/emercado-api/user_cart/";
-const CART_BUY_URL = "https://japceibal.github.io/emercado-api/cart/buy.json";
+const CATEGORIES_URL = "http://localhost:3000/categories/";
+const PUBLISH_PRODUCT_URL = "http://localhost:3000/sell/";
+const PRODUCTS_URL = "http://localhost:3000/cats_products/";
+const PRODUCT_INFO_URL = "http://localhost:3000/products/";
+const PRODUCT_INFO_COMMENTS_URL = "http://localhost:3000/products_comments/";
+const CART_INFO_URL = "http://localhost:3000/user_cart/";
+const CART_BUY_URL = "http://localhost:3000/cart/";
 const EXT_TYPE = ".json";
 const spinnerWrapper = document.getElementById("spinner-wrapper");
+const toggleReaderButton = document.getElementById("toggleReaderButton");
+const toggleReaderLi = document.getElementById("toggleReaderLi");
+const toggleReaderDiv = document.getElementById("toggleReaderDiv");
+
+async function postCart(id) {
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      "id": id
+    }),
+  };
+
+  try {
+    const response = await fetch(CART_INFO_URL, postOptions);
+    const data = await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function deleteCart(id) {
+  console.log(id)
+  const deleteOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      "id": parseInt(id)
+    }),
+  };
+
+  try {
+    const response = await fetch(CART_INFO_URL, deleteOptions);
+    const data = await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+function toggleReaderPosition() {
+  if (window.innerWidth <= 838) {
+    toggleReaderLi.append(toggleReaderButton)
+  }
+  else{
+    toggleReaderDiv.append(toggleReaderButton);
+  }
+}
+
+toggleReaderPosition()
+
+window.addEventListener('resize', ()=>{
+  toggleReaderPosition()
+})
 
 function redirectProduct(prodId){
   localStorage.setItem("productId", prodId);
   window.location.href = "product-info.html";
 };
-
 
 let getJSONData = function (url) {
   let result = {};
@@ -150,6 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const logoutSession = document.getElementById("logoutSession");
 logoutSession.addEventListener("click", () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("token");
 });
 
 //Dark Mode
@@ -271,10 +329,10 @@ function btnFavorite(prodId) {
     const heartIcon = document.querySelectorAll(".favoriteBtn");
     heartIcon.forEach((element) => {
       element.addEventListener("click", () => {
-        element.classList.toggle("text-danger");
+        element.classList.toggle("cart-selected");
       });
       if (favoriteElement.includes(prodId)) {
-        element.classList.add("text-danger");
+        element.classList.add("cart-selected");
       }
     });
   }
@@ -288,12 +346,12 @@ function btnCart(prodId) {
     const cartIcon = document.querySelectorAll(".cartIcon");
     cartIcon.forEach((element) => {
       element.addEventListener("click", () => {
-        element.classList.add("text-danger");
-        element.classList.remove("text-white");
+        element.classList.add("cart-selected");
+        element.classList.remove("cart-unselected");
       });
       if (cartElement.includes(prodId)) {
-        element.classList.add("text-danger");
-        element.classList.remove("text-white");
+        element.classList.add("cart-selected");
+        element.classList.remove("cart-unselected");
       }
     });
   }
@@ -322,7 +380,6 @@ function btnCart(prodId) {
 
 let synth = window.speechSynthesis; 
 let reading = null;
-const toggleReaderButton = document.getElementById('toggleReaderButton');
 let isReaderEnabled = false;
 
 toggleReaderButton.addEventListener('click', function() {
